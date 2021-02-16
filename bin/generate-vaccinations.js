@@ -275,7 +275,7 @@ const _one = _.promise((self, done) => {
             "schema:immunizationDate": "immunizationDate",
             "schema:doseSequence": "doseSequence",
             "schema:lotNumber": "lotNumber",
-            "w3did:id": "did",
+            "vc:id": "did",
         }))
         .add("result:MedicalRecord")
 
