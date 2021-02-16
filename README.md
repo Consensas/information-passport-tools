@@ -25,6 +25,10 @@ If you're just interested in the code for working with them,
 please go **[here](https://github.com/Consensas/information-passport/tree/main/docs#information-passport)**.
 
 ## The Tools
+
+All the tools are found in `bin`. 
+Make sure to `npm install` this package first.
+
 ### Build Sample Website
 
     node generate-vaccinations.js \
