@@ -30,6 +30,7 @@ const ip = require("information-passport")
 const ipt = require("..")
 
 const colors = require("colors")
+const jsonld = require("jsonld")
 
 /**
  */
@@ -40,24 +41,21 @@ const verify = _.promise((self, done) => {
         .then(_load_json)
         .make(async sd => {
             if (sd.is_claim) {
+                const compacted = await jsonld.compact(sd.json, ip.context)
                 const vc = {
-                    "@context": {
-                        "schema": "http://schema.org/",
-                        "security": "https://w3id.org/security#",
-                        "vc": "https://www.w3.org/2018/credentials/v1"
-                    },
+                    "@context": ip.context,
                     "@type": [
                         "vc:VerifiableCredential",
                         "vc:HealthCredential"
                     ],
                     "vc:issuer": "https://passport.consensas.com",
                     "vc:issuanceDate": _.timestamp.make(),
-                    "vc:credentialSubject": sd.json,
+                    "vc:credentialSubject": compacted,
                 }
 
                 sd.verified = {
                     payload: vc,
-                    claim: sd.json,
+                    claim: compacted,
                     types: [ "vc:VerifiableCredential", "vc:HealthCredential" ],
                     chain: [],
                     proof: {},
