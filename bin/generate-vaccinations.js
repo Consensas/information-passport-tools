@@ -109,7 +109,7 @@ const _html = _.promise((self, done) => {
     _.promise(self)
         .validate(_html)
 
-        .then(fs.read.utf8.p(path.join(__dirname, "../data/vaccination-template.html")))
+        .then(fs.read.utf8.p(path.join(__dirname, "../samples/data/vaccination-template.html")))
         .add("document:template")
 
         .then(ipt.schemas.initialize)
@@ -125,16 +125,37 @@ const _html = _.promise((self, done) => {
             lines.push("</p>")
 
             _.d.list(sd.schema, "groups", []).forEach(group => {
-                lines.push("<h2>")
-                lines.push(_encode(group.name))
-                lines.push("</h2><ul>")
+                group.show = group.show ?? true
+                if (!group.show) {
+                    return
+                }
+
+                let any = false
+
                 _.d.list(group, "nodes", []).forEach(node => {
-                    lines.push("<li>")
-                    lines.push(`${node.name}: `)
-                    lines.push(_.d.first(sd.json, node.id, ""))
-                    lines.push("</li>")
+                    node.show = group.node ?? true
+                    if (!node.show) {
+                        return
+                    }
+
+                    const value = _.d.first(sd.json, node.id, "")
+                    if (_.is.Empty(value)) {
+                        return
+                    }
+
+                    if (!any) {
+                        lines.push("<h2>")
+                        lines.push(_encode(group.name))
+                        lines.push("</h2><ul>")
+                        any = true
+                    }
+
+                    lines.push(`<li>${node.name}: ${value}</li>`)
                 })
-                lines.push("</ul>")
+
+                if (any) {
+                    lines.push("</ul>")
+                }
             })
 
             sd.document = sd.template.replace("CONTENT", lines.join("\n"))
@@ -320,7 +341,7 @@ _.promise()
     .then(ipt.templates.initialize)
     .then(ipt.schemas.initialize)
 
-    .add("path", path.join(__dirname, "../data/fake-records.yaml"))
+    .add("path", path.join(__dirname, "../samples/data/fake-records.yaml"))
     .then(fs.read.json.magic)
     .make(sd => {
         sd.records = sd.json // .slice(0, 1)

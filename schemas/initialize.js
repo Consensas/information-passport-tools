@@ -34,7 +34,7 @@ const initialize = _.promise((self, done) => {
         .validate(initialize)
 
         .add({
-            path: path.join(__dirname, "../../data/schemas"),
+            path: path.join(__dirname, "../data/schemas"),
             fs$filter_name: name => name.endsWith(".yaml"),
         })
         .then(fs.list)
