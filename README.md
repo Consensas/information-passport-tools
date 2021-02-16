@@ -24,7 +24,8 @@ These are tools for working with information passports.
 If you're just interested in the code for working with them, 
 please go **[here](https://github.com/Consensas/information-passport/tree/main/docs#information-passport)**.
 
-## Build Sample Website
+## The Tools
+### Build Sample Website
 
     node generate-vaccinations.js \
         --verifier 'https://gist.githubusercontent.com/dpjanes/d2e3b972f56e73c8a85b7cc983c9114e/raw/6fe7f11e19478241e61fce8e36b2f2ba626a9fd0/public.cer.pem' \
@@ -32,7 +33,6 @@ please go **[here](https://github.com/Consensas/information-passport/tree/main/d
 		--issuer "https://passport.consensas.com" \
         --host 'passport.consensas.com'
 
-## Tools
 ### Validation
 Test the validation tool - this will go out the internet, fetch 
 a signed document, it's validator and tell the result
