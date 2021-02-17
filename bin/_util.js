@@ -41,36 +41,23 @@ const verify = _.promise((self, done) => {
         .then(_load_json)
         .make(async sd => {
             if (sd.is_claim) {
-                const compacted = await jsonld.compact(sd.json, ip.context)
-                const vc = {
-                    "@context": ip.context,
-                    "@type": [
+                sd.json = await ip.crypto.make({
+                    type: [
                         "vc:VerifiableCredential",
                         "vc:HealthCredential"
                     ],
-                    "vc:issuer": "https://passport.consensas.com",
-                    "vc:issuanceDate": _.timestamp.make(),
-                    "vc:credentialSubject": compacted,
-                }
-
-                sd.verified = {
-                    payload: vc,
-                    claim: compacted,
-                    types: [ "vc:VerifiableCredential", "vc:HealthCredential" ],
-                    chain: [],
-                    proof: {},
-                }
-            } else {
-                sd.verified = await ip.crypto.verify(sd.json, {
-                    fetch_chain: async proof => {
-                        const result = await _.promise({})
-                            .then(fetch.document.get(proof.verificationMethod))
-
-                        return result.document
-                    },
+                    credentialSubject: sd.json,
                 })
             }
 
+            sd.verified = await ip.crypto.verify(sd.json, {
+                fetch_chain: async proof => {
+                    const result = await _.promise({})
+                        .then(fetch.document.get(proof.verificationMethod))
+
+                    return result.document
+                },
+            })
         })
 
         .end(done, self, verify)
