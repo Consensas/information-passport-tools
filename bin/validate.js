@@ -38,7 +38,6 @@ const ad = minimist(process.argv.slice(2), {
         "json",
         "silent",
         "claim",
-        "lint",
     ],
     string: [
         "in",
@@ -82,7 +81,6 @@ fomatting options:
 --json             format the output as JSON (the default)
 --pretty           format the output the best you can 
 --clear            clear screen when result found
---lint             check for issues with the VC
 
 rule options (one of these are required):
 
@@ -140,11 +138,8 @@ _.promise({
             await ip.validate.with.certs(sd.validated, sd.certs)
         }
     })
-    .conditional(ad.lint, _util.lint)
     .make(sd => {
         if (ad.silent) {
-        } else if (ad.lint) {
-            console.log(JSON.stringify(sd.verified.lints, null, 2))
         } else if (!ad.pretty) {
             console.log(JSON.stringify(sd.verified, null, 2))
         } else {

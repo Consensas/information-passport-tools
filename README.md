@@ -82,6 +82,9 @@ Here's an example of a round-trip
 
 ### Scanners
 
+A hand-held scanner verifier - for Raspberry Pi, 
+but likely easily adaptable to any platform 
+
 Play with Barcode Scanner on a raspberry pi
 
     nohup python scanner.py
@@ -89,3 +92,11 @@ Play with Barcode Scanner on a raspberry pi
 Put the two of them together to scan and verify
 
     nohup sh scanner.sh
+
+Video:
+
+<div align="left">
+      <a href="https://www.youtube.com/watch?v=d3oz7kR6ZjU" target="video">
+         <img src="https://img.youtube.com/vi/d3oz7kR6ZjU/0.jpg" style="width: 200px">
+      </a>
+</div>
