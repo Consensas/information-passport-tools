@@ -80,6 +80,18 @@ Here's an example of a round-trip
     node sign.js --key ../data/private.key.pem | 
     node verify.js --verifier ../data/public.cer.pem
 
+### Lint
+
+Test whether a claim at file / url has all the required fields.
+Note that is only working right now for Vaccination / Immunization,
+but it should be generalizable
+
+    node lint --in "website/QGEKMLKXIV.json"
+
+If there is no verifiable credential, but only the claim
+
+    node lint --in "website/QGEKMLKXIV.json" --claim
+
 ### Scanners
 
 A hand-held scanner verifier - for Raspberry Pi, 
