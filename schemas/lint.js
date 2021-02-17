@@ -23,6 +23,7 @@
 "use strict"
 
 const _ = require("iotdb-helpers")
+const ip = require("information-passport")
 
 /**
  */
@@ -40,7 +41,8 @@ const _lint_Date = (node, value, lints) => {
     if (!_.is.String(value)) {
         lints.push({
             id: node.id,
-            issue: `field was expected to be a string`
+            issue: `field was expected to be a string`,
+            level: ip.level.ERROR,
         })
         return
     }
@@ -54,6 +56,7 @@ const _lint_Date = (node, value, lints) => {
         lints.push({
             id: node.id,
             issue: `field value (${value}) did not match any known date formats`,
+            level: ip.level.ERROR,
         })
     }
 }
@@ -77,11 +80,13 @@ const lint = _.promise(self => {
                     lints.push({
                         id: node.id,
                         issue: "field is required but is missing",
+                        level: ip.level.ERROR,
                     })
                 } else if (node.recommended) {
                     lints.push({
                         id: node.id,
                         issue: "field is recommended but is missing",
+                        level: ip.level.WARN,
                     })
                 /*
                 } else if (node.expected) {
@@ -102,6 +107,7 @@ const lint = _.promise(self => {
                         lints.push({
                             id: node.id,
                             issue: `field value (${value}) not expected (expected: ${xs.join(", ")})`,
+                            level: ip.level.ERROR,
                         })
                     }
                 }
