@@ -32,10 +32,11 @@ Make sure to `npm install` this package first.
 ### Build Sample Website
 
     node generate-vaccinations.js \
-        --verifier 'https://gist.githubusercontent.com/dpjanes/d2e3b972f56e73c8a85b7cc983c9114e/raw/6fe7f11e19478241e61fce8e36b2f2ba626a9fd0/public.cer.pem' \
+        --verifier ''https://gist.githubusercontent.com/dpjanes/74063bde4c668a7d9fc1ecd66268c069/raw/a633cfdc58311c4ff81aa40f0ef0026c7b183c4d/public.combined.pem \
         --key ../samples/data/private.key.pem \
         --issuer "https://passport.consensas.com" \
-        --host 'passport.consensas.com'
+        --host 'passport.consensas.com' \
+        --n 1
 
 ### Validation
 Test the validation tool - this will go out the internet, fetch 

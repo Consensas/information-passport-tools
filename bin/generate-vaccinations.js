@@ -34,6 +34,10 @@ const minimist = require("minimist")
 const ad = minimist(process.argv.slice(2), {
     boolean: [
         "verbose", "trace", "debug",
+
+        "rsa",
+        "bbs",
+        "canonical",
     ],
     string: [
         "_",
@@ -41,11 +45,13 @@ const ad = minimist(process.argv.slice(2), {
         "verifier",
         "host",
         "issuer",
+        "suite", // CanonicalRSA2021 BbsBlsSignature2020 RsaSignature2018
     ],
     alias: {
     },
     default: {
         "host": "passport.consensas.com",
+        "suite": "RsaSignature2018",
     },
 });
 
@@ -60,9 +66,8 @@ const help = message => {
     console.log(`\
 usage: ${name} [options] 
 
-Generate a complete folder of Vaccination 
-Records which can be served by HTTP like
-Apache or NGINX
+Generate a complete folder of Vaccination Records 
+which can be served by HTTP like Apache or NGINX
 
 The methods used in here can be adapted to 
 your own organization's needs.
@@ -72,6 +77,14 @@ Required:
 --key <private-key.pem> private key PEM
 --verifier <url>        url to public key chain PEM 
 --issuer <url>          url of issuer (any URL will do)
+
+Signing Suite:
+
+--suite <name>          one of CanonicalRSA2021, BbsBlsSignature2020 or RsaSignature2018
+                        RsaSignature2018 is default
+--rsa
+--bbs
+--canonical             ... shortcuts for --suite
 
 Options:
 
@@ -90,6 +103,17 @@ if (!ad.verifier) {
 }
 if (!ad.issuer) {
     help("--issuer argument is required")
+}
+
+
+if (ad.rsa) {
+    ad.suite = "RsaSignature2018"
+} else if (ad.bbs) {
+    ad.suite = "BbsBlsSignature2020"
+} else if (ad.canonical) {
+    ad.suite = "CanonicalRSA2021"
+} else if (!ad.suite) {
+    help("--suite <name> argument is required")
 }
 
 _.logger.levels({
@@ -296,9 +320,10 @@ const _one = _.promise((self, done) => {
         .make(async sd => {
             sd.HealthCredential = _.d.transform.denull(sd.HealthCredential)
             sd.json = await ip.crypto.sign({
-                payload: sd.HealthCredential, 
+                json: sd.HealthCredential, 
                 private_key: sd.private_pem, 
                 verification: ad.verifier,
+                suite: ad.suite,
             })
             sd.path = `website/${sd.record.code}.json`
         })
