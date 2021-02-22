@@ -33,7 +33,7 @@ Make sure to `npm install` this package first.
 
     node generate-vaccinations.js \
         --verifier ''https://gist.githubusercontent.com/dpjanes/74063bde4c668a7d9fc1ecd66268c069/raw/a633cfdc58311c4ff81aa40f0ef0026c7b183c4d/public.combined.pem \
-        --key ../samples/data/private.key.pem \
+        --key ../data-sample/private.key.pem \
         --issuer "https://passport.consensas.com" \
         --host 'passport.consensas.com' \
         --n 1
@@ -50,8 +50,8 @@ Sign a document. Note key has to be decrypted, and that the public key chain
 has to be found at the URL
 
     node sign.js \
-        --file ../data/example-vaccination.json \
-        --key ../data/private.key.pem \
+        --file ../data-sample/example-vaccination.json \
+        --key ../data-sample/private.key.pem \
         --verifier "https://example.org/public.cer.pem"
 
 If you just want to play with tool and don't have the public keychain
@@ -60,8 +60,8 @@ However, you'll have to specify it in the verify tool
 
 `sign` also works on stdin
 
-    cat ../data/example-vaccination.json | 
-    node sign.js --key ../data/private.key.pem 
+    cat ../data-sample/example-vaccination.json | 
+    node sign.js --key ../data-sample/private.key.pem 
 
 To verify a document
 
@@ -69,17 +69,17 @@ To verify a document
 
 Or if you need to manually specify the verifier
 
-    node verify.js --file signed.json --verifier ../data/public.cer.pem
+    node verify.js --file signed.json --verifier ../data-sample/public.cer.pem
 
 Or if you want to use stdin
 
-    cat signed.json | node verify.js --verifier ../data/public.cer.pem
+    cat signed.json | node verify.js --verifier ../data-sample/public.cer.pem
 
 Here's an example of a round-trip 
 
-    cat ../data/example-vaccination.json | 
-    node sign.js --key ../data/private.key.pem | 
-    node verify.js --verifier ../data/public.cer.pem
+    cat ../data-sample/example-vaccination.json | 
+    node sign.js --key ../data-sample/private.key.pem | 
+    node verify.js --verifier ../data-sample/public.cer.pem
 
 ### Lint
 

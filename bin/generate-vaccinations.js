@@ -133,7 +133,7 @@ const _html = _.promise((self, done) => {
     _.promise(self)
         .validate(_html)
 
-        .then(fs.read.utf8.p(path.join(__dirname, "../samples/data/vaccination-template.html")))
+        .then(fs.read.utf8.p(path.join(__dirname, "../data-sample/vaccination-template.html")))
         .add("document:template")
 
         .then(ipt.schemas.initialize)
@@ -366,7 +366,7 @@ _.promise()
     .then(ipt.templates.initialize)
     .then(ipt.schemas.initialize)
 
-    .add("path", path.join(__dirname, "../samples/data/fake-records.yaml"))
+    .add("path", path.join(__dirname, "../data-sample/fake-records.yaml"))
     .then(fs.read.json.magic)
     .make(sd => {
         sd.records = sd.json // .slice(0, 1)

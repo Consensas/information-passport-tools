@@ -74,7 +74,7 @@ const lint = _.promise(self => {
 
     _.d.list(self.schema, "groups", []).forEach(group => {
         _.d.list(group, "nodes", []).forEach(node => {
-            const values = _.d.list(self.verified.claim, node.id)
+            const values = _.d.list(self.verified.credentialSubject, node.id)
             if (!values) {
                 if (node.required) {
                     lints.push({
@@ -130,7 +130,7 @@ lint.description = ``
 lint.requires = {
     schema: _.is.Dictionary,
     verified: {
-        claim: _.is.Dictionary,
+        credentialSubject: _.is.Dictionary,
     },
 }
 lint.accepts = {

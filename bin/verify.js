@@ -77,7 +77,7 @@ const run = async (files) => {
     const message = JSON.parse(ad.in ? await fs.promises.readFile(ad.in, "utf-8") : await _util.read_stdin())
 
     const verified = await ip.crypto.verify(message, {
-        fetch_chain: async proof => {
+        fetchProof: async proof => {
             if (_.is.AbsoluteURL(ad.verifier)) {
                 const sd = await _.promise({})
                     .then(fetch.document.get(ad.verifier))

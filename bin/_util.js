@@ -51,7 +51,7 @@ const verify = _.promise((self, done) => {
             }
 
             sd.verified = await ip.crypto.verify(sd.json, {
-                fetch_chain: async proof => {
+                fetchProof: async proof => {
                     const result = await _.promise({})
                         .then(fetch.document.get(proof.verificationMethod))
 
@@ -101,8 +101,8 @@ const pretty = _.promise((self, done) => {
         .validate(pretty)
 
         .make(sd => {
-            sd.claim = _.d.first(sd, "verified/payload/vc:credentialSubject", null)
-            sd.data_type = _.d.first(sd.claim, "@type", null)
+            sd.credentialSubject = _.d.first(sd, "verified/json/vc:credentialSubject", null)
+            sd.data_type = _.d.first(sd.credentialSubject, "@type", null)
         })
         .then(ipt.schemas.initialize)
         .then(ipt.schemas.by_data_type)
@@ -112,7 +112,7 @@ const pretty = _.promise((self, done) => {
             _.d.list(sd.schema, "groups", []).forEach(group => {
                 console.log(colors.green(group.name))
                 _.d.list(group, "nodes", []).forEach(node => {
-                    console.log(`  ${node.name}: ` + colors.cyan(_.d.first(sd.claim, node.id, "")))
+                    console.log(`  ${node.name}: ` + colors.cyan(_.d.first(sd.credentialSubject, node.id, "")))
                 })
             })
 
@@ -237,7 +237,7 @@ const lint = _.promise((self, done) => {
 
         .make(sd => {
             sd.verified.lints = []
-            sd.data_type = _.d.first(sd.verified.claim, "@type", null)
+            sd.data_type = _.d.first(sd.verified.credentialSubject, "@type", null)
         })
         .then(ipt.schemas.initialize)
         .then(ipt.schemas.by_data_type)
@@ -251,7 +251,7 @@ lint.method = "lint"
 lint.description = ``
 lint.requires = {
     verified: {
-        claim: _.is.Dictionary,
+        credentialSubject: _.is.Dictionary,
     },
 }
 lint.accepts = {
