@@ -42,7 +42,7 @@ const verify = _.promise((self, done) => {
         .make(async sd => {
             if (sd.is_claim) {
                 sd.json = await ip.crypto.make({
-                    type: [
+                    credentialTypes: [
                         "vc:VerifiableCredential",
                         "vc:HealthCredential"
                     ],
@@ -51,7 +51,7 @@ const verify = _.promise((self, done) => {
             }
 
             sd.verified = await ip.crypto.verify(sd.json, {
-                fetchProof: async proof => {
+                fetchVerification: async proof => {
                     const result = await _.promise({})
                         .then(fetch.document.get(proof.verificationMethod))
 

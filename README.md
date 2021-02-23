@@ -32,7 +32,7 @@ Make sure to `npm install` this package first.
 ### Build Sample Website
 
     node generate-vaccinations.js \
-        --verifier ''https://gist.githubusercontent.com/dpjanes/74063bde4c668a7d9fc1ecd66268c069/raw/a633cfdc58311c4ff81aa40f0ef0026c7b183c4d/public.combined.pem \
+        --verifier 'https://gist.githubusercontent.com/dpjanes/74063bde4c668a7d9fc1ecd66268c069/raw/a633cfdc58311c4ff81aa40f0ef0026c7b183c4d/public.combined.pem' \
         --key ../data-sample/private.key.pem \
         --issuer "https://passport.consensas.com" \
         --host 'passport.consensas.com' \
@@ -52,7 +52,7 @@ has to be found at the URL
     node sign.js \
         --file ../data-sample/example-vaccination.json \
         --key ../data-sample/private.key.pem \
-        --verifier "https://example.org/public.cer.pem"
+        --verifier 'https://gist.githubusercontent.com/dpjanes/74063bde4c668a7d9fc1ecd66268c069/raw/a633cfdc58311c4ff81aa40f0ef0026c7b183c4d/public.combined.pem' 
 
 If you just want to play with tool and don't have the public keychain
 upload somewhere, leave out the `--verifier` option. 
@@ -79,7 +79,7 @@ Here's an example of a round-trip
 
     cat ../data-sample/example-vaccination.json | 
     node sign.js --key ../data-sample/private.key.pem | 
-    node verify.js --verifier ../data-sample/public.cer.pem
+    node verify.js --verifier ../data-sample/public.combined.pem
 
 ### Lint
 

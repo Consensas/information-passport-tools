@@ -24,6 +24,7 @@
 
 const _ = require("iotdb-helpers")
 const ip = require("information-passport")
+const fetch = require("iotdb-fetch")
 
 const fs = require("fs")
 const jose = require("node-jose")
@@ -38,11 +39,12 @@ const ad = minimist(process.argv.slice(2), {
     ],
     string: [
         "_",
-        "file",
+        "in",
         "key",
         "verifier",
     ],
     alias: {
+        "file": "in",
     },
     default: {
         "verifier": "",
@@ -58,7 +60,7 @@ const help = message => {
     }
 
     console.log(`\
-usage: ${name} [options] [--file <file.json>] --key <private-key.pem> [--verifier <url>]
+usage: ${name} [options] [--in <source>] --key <private-key.pem> [--verifier <url>]
 
 Required:
 
@@ -66,7 +68,7 @@ Required:
 
 Options:
 
---file <file.json>      json file to sign, otherwise stdin is used
+--in <source>           json file or URL to sign, otherwise stdin is used
 --verifier <url>        url to public key chain. If not used, you'll get output
                         but it will be tricky to verify / validate!
 `)
@@ -77,8 +79,8 @@ Options:
 if (!ad.key) {
     help("--key argument is required")
 }
-if (ad.file === "-") {
-    delete ad.file
+if (ad.in === "-") {
+    delete ad.in
 }
 
 _.logger.levels({
@@ -86,15 +88,26 @@ _.logger.levels({
     trace: ad.trace || ad.verbose,
 })
 
-const run = async (files) => {
+const run = async () => {
     const private_pem = await fs.promises.readFile(ad.key)
-    const message = JSON.parse(ad.file ? await fs.promises.readFile(ad.file) : await _util.read_stdin())
+
+    let json = null
+    if (_.is.AbsoluteURL(ad.in)) {
+        const sd = await _.promise({})
+            .then(fetch.document.get(ad.verifier))
+        json = JSON.parse(sd.document)
+    } else if (ad.in) {
+        json = JSON.parse(await fs.promises.readFile(ad.in))
+    } else {
+        json = await _util.read_stdin()
+    }
 
     const signed = await ip.crypto.sign({
-        json: message, 
-        private_key: private_pem, 
+        json: json, 
+        privateKeyPem: private_pem, 
         verification: ad.verifier,
     })
+
     console.log(JSON.stringify(signed, null, 2))
 }
 

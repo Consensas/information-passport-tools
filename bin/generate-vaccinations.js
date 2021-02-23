@@ -321,7 +321,7 @@ const _one = _.promise((self, done) => {
             sd.HealthCredential = _.d.transform.denull(sd.HealthCredential)
             sd.json = await ip.crypto.sign({
                 json: sd.HealthCredential, 
-                private_key: sd.private_pem, 
+                privateKeyPem: sd.private_pem, 
                 verification: ad.verifier,
                 suite: ad.suite,
             })
