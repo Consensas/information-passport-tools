@@ -34,7 +34,7 @@ Make sure to `npm install` this package first.
     node immunization-samples --n 1 |
     node claim-sign --in - |
     node claim-write-json
-    node claim-write-
+    node claim-write-html
 
     node make-vaccination-claims.js --n 1 > claims.json
     node sign-claims.js 

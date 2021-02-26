@@ -105,7 +105,6 @@ if (!ad.issuer) {
     help("--issuer argument is required")
 }
 
-
 if (ad.rsa) {
     ad.suite = "RsaSignature2018"
 } else if (ad.bbs) {

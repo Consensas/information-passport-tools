@@ -198,6 +198,7 @@ const _one = _.promise((self, done) => {
         .add("result:json")
 
         .make(sd => {
+            console.log("---")
             console.log(JSON.stringify(sd.result))
         })
 
