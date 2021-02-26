@@ -31,6 +31,14 @@ Make sure to `npm install` this package first.
 
 ### Build Sample Website
 
+    node immunization-samples.js --n 3 | 
+    node claim-sign \
+        --key ../data-sample/private.key.pem \
+        --verifier 'https://gist.githubusercontent.com/dpjanes/74063bde4c668a7d9fc1ecd66268c069/raw/a633cfdc58311c4ff81aa40f0ef0026c7b183c4d/public.combined.pem' \
+        --issuer "https://passport.consensas.com" \
+        --host 'passport.consensas.com' |
+
+
     node immunization-samples --n 1 |
     node claim-sign --in - |
     node claim-write-json

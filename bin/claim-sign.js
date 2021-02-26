@@ -96,10 +96,6 @@ Options:
     process.exit(message ? 1 : 0)
 }
 
-if (ad.in === "-") {
-    delete ad.in
-}
-
 if (!ad.key) {
     help("--key argument is required")
 }
@@ -175,19 +171,9 @@ _.promise({
     .then(ipt.templates.initialize)
     .then(ipt.schemas.initialize)
 
+    .then(_util.read_argument.p(ad.in))
     .make(async sd => {
-        let document
-        if (_.is.AbsoluteURL(ad.in)) {
-            const sd = await _.promise({})
-                .then(fetch.document.get(ad.verifier))
-            document = JSON.parse(sd.document)
-        } else if (ad.in) {
-            document = JSON.parse(await fs.promises.readFile(ad.in))
-        } else {
-            document = await _util.read_stdin()
-        }
-
-        sd.jsons = yaml.loadAll(document)
+        sd.jsons = yaml.loadAll(sd.document)
     })
 
     .each({

@@ -96,6 +96,41 @@ const read_stdin = () => {
 
 /**
  */
+const read_argument = _.promise((self, done) => {
+    _.promise(self)
+        .validate(read_argument)
+
+        .make(async sd => {
+            if (_.is.AbsoluteURL(sd.path)) {
+                sd.document = (await _.promise({})
+                    .then(fetch.document.get(ad.verifier)))
+                    .document
+            } else if (sd.path === "-") {
+                sd.document = await read_stdin()
+            } else {
+                sd.document = await fs.promises.readFile(sd.path)
+            }
+        })
+        .end(done, self, read_argument)
+})
+
+read_argument.method = "_util.read_argument"
+read_argument.description = ``
+read_argument.requires = {
+    path: _.is.String,
+}
+read_argument.accepts = {
+}
+read_argument.produces = {
+    document: _.is.String,
+}
+read_argument.params = {
+    path: _.p.normal,
+}
+read_argument.p = _.p(read_argument)
+
+/**
+ */
 const pretty = _.promise((self, done) => {
     _.promise(self)
         .validate(pretty)
@@ -233,6 +268,7 @@ load_rules.p = _.p(load_rules)
  */
 exports.pretty = pretty
 exports.read_stdin = read_stdin
+exports.read_argument = read_argument
 exports.verify = verify
 exports.load_certs = load_certs
 exports.load_rules = load_rules
