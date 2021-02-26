@@ -231,39 +231,8 @@ load_rules.p = _.p(load_rules)
 
 /**
  */
-const lint = _.promise((self, done) => {
-    _.promise(self)
-        .validate(lint)
-
-        .make(sd => {
-            sd.verified.lints = []
-            sd.data_type = _.d.first(sd.verified.credentialSubject, "@type", null)
-        })
-        .then(ipt.schemas.initialize)
-        .then(ipt.schemas.by_data_type)
-        .conditional(sd => !sd.schema, _.promise.bail)
-        .then(ipt.schemas.lint)
-
-        .end(done, self, lint)
-})
-
-lint.method = "lint"
-lint.description = ``
-lint.requires = {
-    verified: {
-        credentialSubject: _.is.Dictionary,
-    },
-}
-lint.accepts = {
-}
-lint.produces = {
-}
-
-/**
- */
 exports.pretty = pretty
 exports.read_stdin = read_stdin
 exports.verify = verify
 exports.load_certs = load_certs
 exports.load_rules = load_rules
-exports.lint = lint

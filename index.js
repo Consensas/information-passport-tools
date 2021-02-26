@@ -23,7 +23,6 @@
 "use strict"
 
 module.exports = {
-    lib: require("./lib"),
-    schemas: require("./schemas"),
-    templates: require("./templates"),
+    schemas: require("./lib/schemas"),
+    templates: require("./lib/templates"),
 }

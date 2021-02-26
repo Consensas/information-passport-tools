@@ -91,10 +91,53 @@ _.logger.levels({
 
 /**
  */
+const lint = _.promise((self, done) => {
+    _.promise(self)
+        .validate(lint)
+
+        .make(sd => {
+            sd.verified.lints = []
+            sd.data_type = _.d.first(sd.verified.credentialSubject, "@type", null)
+        })
+        .then(ipt.schemas.initialize)
+        .then(ipt.schemas.by_data_type)
+        .make(sd => {
+            if (sd.schema) {
+                return
+            }
+
+            sd.verified.lints.push({
+                "id": "@type",
+                "issue": `@type="${sd.data_type}" unknown`,
+                "level": 30
+            })
+            
+            _.promise.bail(sd)
+        })
+        .then(ipt.schemas.lint)
+
+        .end(done, self, lint)
+})
+
+lint.method = "lint"
+lint.description = ``
+lint.requires = {
+    verified: {
+        credentialSubject: _.is.Dictionary,
+    },
+}
+lint.accepts = {
+}
+lint.produces = {
+}
+
+
+/**
+ */
 _.promise({
 })
     .then(_util.verify.p(ad.in, ad.claim))
-    .then(_util.lint)
+    .then(lint)
     .make(sd => {
         console.log(JSON.stringify(sd.verified.lints, null, 2))
     })
