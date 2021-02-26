@@ -361,6 +361,10 @@ _.promise()
         sd.private_pem = await fs.promises.readFile(ad.key, "utf8")
         sd.verifier = ad.verifier
         sd.issuer = ad.issuer
+        sd.ipt$cfg = {
+            schemas: path.join(__dirname, "..", "data", "schemas"),
+            templates: path.join(__dirname, "..", "data", "templates"),
+        }
     })
 
     .then(ipt.templates.initialize)
