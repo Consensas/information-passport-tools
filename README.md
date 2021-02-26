@@ -31,6 +31,16 @@ Make sure to `npm install` this package first.
 
 ### Build Sample Website
 
+    node immunization-samples --n 1 |
+    node claim-sign --in - |
+    node claim-write-json
+    node claim-write-
+
+    node make-vaccination-claims.js --n 1 > claims.json
+    node sign-claims.js 
+    node write-claims.js < claims.json
+    nod
+
     node generate-vaccinations.js \
         --verifier 'https://gist.githubusercontent.com/dpjanes/74063bde4c668a7d9fc1ecd66268c069/raw/a633cfdc58311c4ff81aa40f0ef0026c7b183c4d/public.combined.pem' \
         --key ../data-sample/private.key.pem \

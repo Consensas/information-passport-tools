@@ -1,5 +1,5 @@
 /**
- *  bin/generate-vaccinations.js
+ *  bin/immunization-samples.js
  *
  *  David Janes
  *  Consensas
@@ -57,7 +57,7 @@ const ad = minimist(process.argv.slice(2), {
 });
 
 const help = message => {
-    const name = "generate-records"
+    const name = "immunization-samples"
 
     if (message) {
         console.log(`${name}: ${message}`)
@@ -67,30 +67,12 @@ const help = message => {
     console.log(`\
 usage: ${name} [options] 
 
-Generate a complete folder of Vaccination Records 
-which can be served by HTTP like Apache or NGINX
-
-The methods used in here can be adapted to 
-your own organization's needs.
-
-Required:
-
---key <private-key.pem> private key PEM
---verifier <url>        url to public key chain PEM 
---issuer <url>          url of issuer (any URL will do)
-
-Signing Suite:
-
---suite <name>          one of CanonicalRSA2021, BbsBlsSignature2020 or RsaSignature2018
-                        RsaSignature2018 is default
---rsa
---bbs
---canonical             ... shortcuts for --suite
+Generate Immunization Records based on the
+fake data samples
 
 Options:
 
 --n <n>                 number of records (default: all)
---host <host>           host these are served from (default: passport.consensas.com)
 `)
 
     process.exit(message ? 1 : 0)
@@ -202,7 +184,6 @@ const _one = _.promise((self, done) => {
         .add("result:MedicalRecord")
         .add("result:json")
 
-        /*
         // Covid Credential
         .then(ipt.templates.by_name.p("HealthCredential"))
         .add(sd => ({
@@ -217,35 +198,8 @@ const _one = _.promise((self, done) => {
         .add("result:json")
 
         .make(sd => {
-            sd.json = [ sd.HealthCredential ]
+            console.log(JSON.stringify(sd.result))
         })
-        .then(document.from.yaml)
-        .then(fs.write.stdout)
-        */
-
-        /*
-        // sign 
-        .make(async sd => {
-            sd.HealthCredential = _.d.transform.denull(sd.HealthCredential)
-            sd.json = await ip.crypto.sign({
-                json: sd.HealthCredential, 
-                privateKeyPem: sd.private_pem, 
-                verification: ad.verifier,
-                suite: ad.suite,
-            })
-            sd.path = `website/${sd.record.code}.json`
-        })
-
-        // write the JSON
-        .then(fs.make.directory.parent)
-        .then(fs.write.json.pretty)
-        .log("path", "path")
-
-        // write the HTML
-        .add("MedicalRecord:json")
-        .then(_html)
-        */
-
 
         .end(done, self, _one)
 })
@@ -265,18 +219,16 @@ _one.produces = {
 
 /**
  */
-_.promise()
-    .make(async sd => {
-        sd.ipt$cfg = {
-            schemas: path.join(__dirname, "..", "data", "schemas"),
-            templates: path.join(__dirname, "..", "data", "templates"),
-        }
-    })
-
+_.promise({
+    ipt$cfg: {
+        schemas: path.join(__dirname, "..", "data", "schemas"),
+        templates: path.join(__dirname, "..", "data", "templates"),
+    },
+    path: path.join(__dirname, "../data-sample/fake-records.yaml"),
+})
     .then(ipt.templates.initialize)
     .then(ipt.schemas.initialize)
 
-    .add("path", path.join(__dirname, "../data-sample/fake-records.yaml"))
     .then(fs.read.json.magic)
     .make(sd => {
         sd.records = sd.json // .slice(0, 1)
@@ -287,12 +239,7 @@ _.promise()
     .each({
         method: _one,
         inputs: "records:record",
-        outputs: "json",
-        output_selector: sd => sd.json,
     })
-
-    .then(document.from.json)
-    .then(fs.write.stdout)
     
     .except(error => {
         delete error.self
