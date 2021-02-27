@@ -85,6 +85,29 @@ const _one = _.promise((self, done) => {
     _.promise(self)
         .validate(_one)
 
+        // figure out ID
+        .make(sd => {
+            const id = [
+                _.d.first(sd.json, "vc:credentialSubject/id"),
+                _.d.first(sd.json, "vc:credentialSubject/vc:id"),
+                _.d.first(sd.json, "credentialSubject/id"),
+                _.d.first(sd.json, "credentialSubject/vc:id"),
+                _.d.first(sd.json, "id"),
+                _.d.first(sd.json, "vc:id"),
+            ].filter(x => x)[0]
+
+            if (!id) {
+                console.error("could not find ID", JSON.stringify(sd.json, null, 2))
+            }
+                
+            sd.path = `${ad.folder}/${id.replace(/^.*:/, "")}.json`
+        })
+
+        // write the JSON
+        .then(fs.make.directory.parent)
+        .then(fs.write.json.pretty)
+        .log("wrote json", "path")
+
         .end(done, self, _one)
 })
 
