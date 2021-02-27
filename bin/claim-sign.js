@@ -45,6 +45,7 @@ const ad = minimist(process.argv.slice(2), {
     string: [
         "_",
         "in",
+        "out",
         "key",
         "verifier",
         "host",
@@ -57,6 +58,7 @@ const ad = minimist(process.argv.slice(2), {
         "host": "passport.consensas.com",
         "suite": "RsaSignature2018",
         "in": "-",
+        "out": "-",
     },
 });
 
@@ -91,6 +93,7 @@ Options:
 
 --n <n>                 number of records (default: all)
 --host <host>           host these are served from (default: passport.consensas.com)
+--no-out                don't pass through input
 `)
 
     process.exit(message ? 1 : 0)
@@ -134,8 +137,11 @@ const _one = _.promise((self, done) => {
                 verification: ad.verifier,
                 suite: ad.suite,
             })
-            console.log("---")
-            console.log(JSON.stringify(sd.json))
+
+            if (ad.out) {
+                console.log("---")
+                console.log(JSON.stringify(sd.json))
+            }
         })
 
         .end(done, self, _one)

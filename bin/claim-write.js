@@ -37,18 +37,19 @@ const minimist = require("minimist")
 const ad = minimist(process.argv.slice(2), {
     boolean: [
         "verbose", "trace", "debug",
-
     ],
     string: [
         "_",
         "in",
         "folder",
+        "out",
     ],
     alias: {
     },
     default: {
         "folder": "website",
         "in": "-",
+        "out": "-",
     },
 });
 
@@ -69,6 +70,7 @@ Options:
 
 --in <file>             data to read (default: stdin)
 --folder <dir>          where to write files (default: 'website')
+--no-out                don't pass through input
 `)
 
     process.exit(message ? 1 : 0)
@@ -107,6 +109,13 @@ const _one = _.promise((self, done) => {
         .then(fs.make.directory.parent)
         .then(fs.write.json.pretty)
         .log("wrote json", "path")
+
+        .make(sd => {
+            if (ad.out) {
+                console.log("---")
+                console.log(JSON.stringify(sd.json))
+            }
+        })
 
         .end(done, self, _one)
 })
