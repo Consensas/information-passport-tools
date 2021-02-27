@@ -31,6 +31,8 @@ Make sure to `npm install` this package first.
 
 ### Build Sample Website
 
+This is the new way - a big pipeline:
+
     node immunization-samples.js --n 3 | 
     node claim-sign \
         --key ../data-sample/private.key.pem \
@@ -38,18 +40,9 @@ Make sure to `npm install` this package first.
         --issuer "https://passport.consensas.com" \
         --host 'passport.consensas.com' |
     node claim-write |
-    node claim-html
+    node claim-html --no-out
 
-
-    node immunization-samples --n 1 |
-    node claim-sign --in - |
-    node claim-write-json
-    node claim-write-html
-
-    node make-vaccination-claims.js --n 1 > claims.json
-    node sign-claims.js 
-    node write-claims.js < claims.json
-    nod
+This is the old way, and is going away
 
     node generate-vaccinations.js \
         --verifier 'https://gist.githubusercontent.com/dpjanes/74063bde4c668a7d9fc1ecd66268c069/raw/a633cfdc58311c4ff81aa40f0ef0026c7b183c4d/public.combined.pem' \
