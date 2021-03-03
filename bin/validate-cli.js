@@ -29,6 +29,8 @@ const ipt = require("..")
 
 const _util = require("./_util")
 
+const path = require("path")
+
 const minimist = require("minimist")
 const ad = minimist(process.argv.slice(2), {
     boolean: [
@@ -87,9 +89,16 @@ const poll = async () => {
                         console.clear()
 
                         _.promise({
-                            url: part,
+                            in: part,
+							ipt$cfg: {
+								schemas: path.join(__dirname, "..", "data", "schemas"),
+								templates: path.join(__dirname, "..", "data", "templates"),
+							},
                         })
-                            .then(_util.verify_url)
+							.then(ipt.templates.initialize)
+							.then(ipt.schemas.initialize)
+
+                            .then(_util.verify)
                             .then(_util.pretty)
 
                             .except(error => {
@@ -115,6 +124,10 @@ poll().catch(error => {
 /**
 _.promise({
     url: ad.url,
+    ipt$cfg: {
+        schemas: path.join(__dirname, "..", "data", "schemas"),
+        templates: path.join(__dirname, "..", "data", "templates"),
+    },
 })
     .then(_util.verify_url)
     .make(sd => {

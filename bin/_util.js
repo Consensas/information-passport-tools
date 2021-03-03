@@ -145,8 +145,22 @@ const pretty = _.promise((self, done) => {
 
         .make(sd => {
             _.d.list(sd.schema, "groups", []).forEach(group => {
-                console.log(colors.green(group.name))
+				if (!(group.show ?? true)) {
+					return
+				}
+
+				let first = true
+
                 _.d.list(group, "nodes", []).forEach(node => {
+					if (!(node.show ?? true)) {
+						return
+					}
+
+					if (first) {
+						first = false
+						console.log(colors.green(group.name))
+					}
+
                     console.log(`  ${node.name}: ` + colors.cyan(_.d.first(sd.credentialSubject, node.id, "")))
                 })
             })
@@ -163,7 +177,7 @@ pretty.method = "pretty"
 pretty.description = ``
 pretty.requires = {
     verified: {
-        payload: _.is.Dictionary,
+        json: _.is.Dictionary,
     },
 }
 pretty.accepts = {
